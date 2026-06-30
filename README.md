@@ -87,7 +87,7 @@ The HTTP sidecar starts at port **3030** and automatically increments if the por
 ## Features
 
 - **Full GitHub Flavored Markdown** — tables, strikethrough, task lists, autolinks, definition lists
-- **Mermaid diagrams** — `\`\`\`mermaid` blocks render as diagrams in the phone viewer
+- **Mermaid diagrams** — <code>```mermaid</code> blocks render as diagrams in the phone viewer
 - **Syntax highlighting** — code blocks rendered with Prism (desktop) and Chroma (viewer)
 - **QR code generation** — server-side PNG, displayed as base64 Data URL
 - **Note management** — create, edit, delete, regenerate QR for existing notes
