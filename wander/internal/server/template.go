@@ -16,9 +16,10 @@ h1,h2,h3,h4,h5,h6{color:#f3f4f6;margin-top:1.5em;margin-bottom:.5em}
 p{margin:.75em 0}
 a{color:#60a5fa}
 a:hover{color:#93c5fd}
-code{background:#1f2937;padding:.15em .4em;border-radius:.25em;font-size:.875em}
-pre{background:#1f2937;padding:1em;border-radius:.5em;overflow-x:auto;max-width:100%%;-webkit-overflow-scrolling:touch;margin:1em 0}
-pre code{background:0 0;padding:0}
+code{background:#1f2937;padding:.15em .4em;border-radius:.25em;font-size:.875em;-webkit-text-size-adjust:none;text-size-adjust:none}
+pre{background:#1f2937;padding:1em;border-radius:.5em;overflow-x:auto;max-width:100%%;-webkit-overflow-scrolling:touch;margin:1em 0;-webkit-text-size-adjust:none;text-size-adjust:none}
+pre span[style*="display:flex"]{display:block!important}
+pre code{background:0 0;padding:0;-webkit-text-size-adjust:none;text-size-adjust:none}
 ul,ol{margin:.75em 0;padding-left:1.5em}
 li{margin:.25em 0}
 blockquote{border-left:4px solid #374151;padding-left:1em;color:#9ca3af;font-style:italic;margin:1em 0}
