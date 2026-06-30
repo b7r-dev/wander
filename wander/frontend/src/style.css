@@ -448,6 +448,12 @@ code,
   -webkit-overflow-scrolling: touch;
 }
 
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 1100px) {
   .editor-pane {

@@ -27,6 +27,7 @@ th{background:#1f2937;font-weight:600}
 tr:nth-child(even){background:#111827}
 hr{border-color:#374151;margin:1.5em 0}
 input[type=checkbox]{margin-right:.5em;accent-color:#3b82f6}
+img{max-width:100%;height:auto;display:block}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:#1f2937}
 ::-webkit-scrollbar-thumb{background:#4b5563;border-radius:4px}
