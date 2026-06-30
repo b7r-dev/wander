@@ -197,4 +197,6 @@ Wails gives us a lightweight desktop shell with a native webview, Go backend bin
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
+
+Copyright (c) 2026 [Aggressively Beige Holdings, LLC](https://www.agbeige.com/)
