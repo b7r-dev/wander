@@ -19,9 +19,13 @@ Notes are stored in a local SQLite database in `~/.wander/wander.db`. They stick
 
 ---
 
-## Screenshot
+## Screenshots
 
-*(Add a screenshot of the desktop app and a phone view here)*
+| Desktop | Mobile Viewer |
+|---------|---------------|
+| ![Desktop app showing markdown editor, QR code panel, and recent payloads](doc_assets/desktop.png) | ![Mobile phone rendering a markdown note with syntax highlighting](doc_assets/mobile.png) |
+
+*Left: The desktop app with the markdown editor, QR code panel, and recent payloads drawer. Right: The phone viewer — a clean, server-rendered markdown page with syntax highlighting and dark mode.*
 
 ---
 
