@@ -20,6 +20,7 @@ func init() {
 	md = goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
+			extension.DefinitionList,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("vsc-dark-plus"),
 				highlighting.WithFormatOptions(
