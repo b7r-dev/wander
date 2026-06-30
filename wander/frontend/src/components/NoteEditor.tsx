@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface NoteEditorProps {
   initialContent?: string;
   onSave: (content: string) => void;
-  onCancel?: () => void;
+  onClear?: () => void;
   saveLabel?: string;
+  clearLabel?: string;
 }
 
 export default function NoteEditor({
   initialContent = "",
   onSave,
-  onCancel,
-  saveLabel = "Save",
+  onClear,
+  saveLabel = "Save Payload",
+  clearLabel = "Clear",
 }: NoteEditorProps) {
   const [content, setContent] = useState(initialContent);
 
@@ -21,30 +23,38 @@ export default function NoteEditor({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      handleSave();
+    }
+  };
+
   return (
-    <div className="space-y-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Paste your markdown here..."
-        className="w-full h-64 p-4 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 font-mono text-base resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        onKeyDown={handleKeyDown}
+        placeholder="Paste markdown here..."
+        className="markdown-editor"
+        spellCheck={false}
       />
-      <div className="flex gap-3">
+      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
         <button
           onClick={handleSave}
           disabled={!content.trim()}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition-colors"
+          className="btn-primary"
         >
           {saveLabel}
         </button>
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg font-medium transition-colors"
-          >
-            Cancel
+        {onClear && (
+          <button onClick={onClear} className="btn-secondary">
+            {clearLabel}
           </button>
         )}
+        <span style={{ color: "var(--beige-dim)", fontSize: "11px", marginLeft: "auto" }}>
+          {content.length > 0 ? `${content.length} chars` : ""}
+        </span>
       </div>
     </div>
   );

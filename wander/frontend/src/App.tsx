@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import NoteEditor from "./components/NoteEditor";
-import NoteList from "./components/NoteList";
+import RecentPayloads from "./components/RecentPayloads";
 import QrPanel from "./components/QrPanel";
 
 interface Note {
@@ -13,6 +13,8 @@ function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [qrData, setQrData] = useState<{ qrDataUrl: string; fullUrl: string } | null>(null);
   const [lanBaseUrl, setLanBaseUrl] = useState("http://localhost:3030");
+  const [isLanEditing, setIsLanEditing] = useState(false);
+  const [lanInput, setLanInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
 
@@ -59,8 +61,8 @@ function App() {
       await refreshNotes();
       setEditingNote(null);
     } catch (err) {
-      console.error("Failed to update note:", err);
-      alert("Failed to save note.");
+      console.error("Failed to update payload:", err);
+      alert("Failed to save payload.");
     } finally {
       setIsGenerating(false);
     }
@@ -92,7 +94,7 @@ function App() {
     }
   };
 
-  const handleEdit = async (id: number) => {
+  const handleLoad = async (id: number) => {
     if (!app) return;
     const note = await app.GetNote(id);
     if (note) {
@@ -100,82 +102,190 @@ function App() {
     }
   };
 
-  const handleCancelEdit = () => {
+  const handleClear = () => {
     setEditingNote(null);
   };
 
+  const handleLanEdit = () => {
+    setLanInput(lanBaseUrl);
+    setIsLanEditing(true);
+  };
+
+  const handleLanApply = () => {
+    if (lanInput.trim()) {
+      setLanBaseUrl(lanInput.trim());
+    }
+    setIsLanEditing(false);
+  };
+
+  const handleLanReset = () => {
+    if (!app) return;
+    app.GetAutoLanIP().then((ip: string) => {
+      setLanBaseUrl(`http://${ip}:3030`);
+    });
+    setIsLanEditing(false);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Wander</h1>
-        <p className="text-gray-400">
-          Paste markdown, generate a QR code, and read it on your phone.
-        </p>
-      </div>
-
-      {/* Editor + QR Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: Editor */}
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              LAN Base URL
-            </label>
-            <input
-              type="text"
-              value={lanBaseUrl}
-              onChange={(e) => setLanBaseUrl(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 text-base font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="http://192.168.1.x:3030"
-            />
-            <p className="text-gray-500 text-xs mt-1">
-              Auto-detected. Override if needed for your network.
-            </p>
-          </div>
-
-          {editingNote ? (
-            <div>
-              <h2 className="text-lg font-semibold text-white mb-3">Edit Note</h2>
-              <NoteEditor
-                initialContent={editingNote.content}
-                onSave={handleUpdate}
-                onCancel={handleCancelEdit}
-                saveLabel={isGenerating ? "Saving..." : "Save Changes"}
-              />
-            </div>
-          ) : (
-            <NoteEditor
-              onSave={handleSave}
-              saveLabel={isGenerating ? "Generating..." : "Generate QR & Save"}
-            />
-          )}
+      <header style={{
+        padding: "16px 24px",
+        borderBottom: "1px solid var(--border)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexShrink: 0,
+      }}>
+        <div>
+          <h1 style={{ margin: 0, lineHeight: 1.2 }}>Wander</h1>
+          <p style={{ margin: "4px 0 0", color: "var(--muted)", fontSize: "13px" }}>
+            Paste markdown. Scan it. Read it on your phone.
+          </p>
         </div>
 
-        {/* Right: QR Display */}
-        <div>
+        {/* LAN Status Strip */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+          {!isLanEditing ? (
+            <div className="lan-strip">
+              <div className="lan-status-dot" />
+              <span style={{ color: "var(--muted)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                LAN Ready
+              </span>
+              <span className="lan-url">{lanBaseUrl}</span>
+              <span style={{ color: "var(--muted)", fontSize: "11px" }}>Auto-detected</span>
+              <button className="btn-ghost" onClick={handleLanEdit} style={{ padding: "2px 8px", fontSize: "11px" }}>
+                Edit
+              </button>
+            </div>
+          ) : (
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 14px",
+              background: "var(--field)",
+              border: "1px solid var(--border)",
+              borderRadius: "4px",
+            }}>
+              <span style={{ color: "var(--label)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                LAN Base URL
+              </span>
+              <input
+                type="text"
+                value={lanInput}
+                onChange={(e) => setLanInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleLanApply(); }}
+                style={{
+                  background: "var(--field-deep)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "3px",
+                  padding: "4px 8px",
+                  color: "var(--beige)",
+                  fontSize: "12px",
+                  fontFamily: "monospace",
+                  width: "240px",
+                  outline: "none",
+                }}
+                autoFocus
+              />
+              <button className="btn-compact" onClick={handleLanApply}>Apply</button>
+              <button className="btn-ghost" onClick={handleLanReset} style={{ padding: "4px 10px", fontSize: "11px" }}>
+                Reset Auto
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main style={{
+        flex: 1,
+        display: "flex",
+        gap: "20px",
+        padding: "20px 24px",
+        overflow: "auto",
+        minHeight: 0,
+      }}>
+        {/* Editor Pane */}
+        <div className="editor-pane">
+          <div style={{ marginBottom: "12px" }}>
+            <span className="section-label">
+              {editingNote ? "SOURCE MARKDOWN — EDITING PAYLOAD" : "SOURCE MARKDOWN"}
+            </span>
+            {editingNote && (
+              <span style={{ color: "var(--beige)", fontSize: "12px", marginLeft: "12px" }}>
+                NOTE /{editingNote.id}
+              </span>
+            )}
+          </div>
+
+          <NoteEditor
+            key={editingNote?.id ?? "new"}
+            initialContent={editingNote?.content ?? ""}
+            onSave={editingNote ? handleUpdate : handleSave}
+            onClear={editingNote ? handleClear : undefined}
+            saveLabel={isGenerating ? "Saving..." : editingNote ? "Save Payload" : "Save Payload"}
+            clearLabel={editingNote ? "Revert" : "Clear"}
+          />
+        </div>
+
+        {/* Handoff Pane */}
+        <div className="handoff-pane">
+          <div style={{ marginBottom: "12px" }}>
+            <span className="section-label">PHONE HANDOFF</span>
+          </div>
+
           {qrData ? (
             <QrPanel qrDataUrl={qrData.qrDataUrl} fullUrl={qrData.fullUrl} />
           ) : (
-            <div className="flex items-center justify-center h-full min-h-[300px] bg-gray-800 border border-gray-700 border-dashed rounded-lg">
-              <p className="text-gray-500 text-center">
-                QR code will appear here
-                <br />
-                <span className="text-sm">Paste markdown and click Generate</span>
+            <div style={{
+              background: "var(--panel)",
+              border: "1px solid var(--border)",
+              borderRadius: "6px",
+              padding: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+              minHeight: "280px",
+            }}>
+              <div style={{
+                width: "120px",
+                height: "120px",
+                border: "2px dashed var(--border)",
+                borderRadius: "4px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--beige-dim)" strokeWidth="1.5">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </div>
+              <p style={{ color: "var(--muted)", fontSize: "13px", textAlign: "center", margin: 0 }}>
+                Paste markdown and save to generate a QR code
               </p>
+              <div className="status-readout">
+                <div className="status-dot idle" />
+                <span>Waiting for payload</span>
+              </div>
             </div>
           )}
         </div>
-      </div>
+      </main>
 
-      {/* Notes List */}
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Your Notes</h2>
-        <NoteList
+      {/* Recent Payloads Drawer */}
+      <div style={{ flexShrink: 0, borderTop: "1px solid var(--border)" }}>
+        <RecentPayloads
           notes={notes}
           onDelete={handleDelete}
           onGenerateQr={handleGenerateQr}
-          onEdit={handleEdit}
+          onLoad={handleLoad}
         />
       </div>
     </div>

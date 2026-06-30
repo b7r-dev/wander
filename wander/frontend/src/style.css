@@ -2,24 +2,433 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
+  --color-background: #070807;
+  --color-foreground: #f4efe5;
 }
 
+/* ─── Design Tokens ─── */
+:root {
+  --bg: #070807;
+  --shell: #0b0d0e;
+
+  --panel: #12161a;
+  --panel-2: #18202a;
+  --panel-3: #202b38;
+
+  --field: #0f1724;
+  --field-deep: #0a111b;
+
+  --border: #2f3a49;
+  --border-strong: #4b5a6c;
+  --border-soft: rgba(255, 255, 255, 0.08);
+
+  --text: #f4efe5;
+  --text-soft: #d8d3c8;
+  --muted: #9ca3af;
+
+  --label: #d9d0bf;
+  --beige: #cbbf9f;
+  --beige-dim: #8f846d;
+
+  --accent: #3b82f6;
+  --accent-strong: #2563eb;
+
+  --danger: #b91c1c;
+  --danger-strong: #dc2626;
+}
+
+/* ─── Base ─── */
 html {
-  background-color: var(--color-background);
+  background-color: var(--bg);
 }
 
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-input, textarea {
-  font-size: 16px;
+/* ─── Typography ─── */
+h1 {
+  font-size: 34px;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  color: var(--text);
 }
 
+.label,
+.section-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--label);
+  font-weight: 500;
+}
+
+textarea,
+input,
+code,
+.url,
+.payload-id {
+  font-family: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+}
+
+/* ─── Editor Pane ─── */
+.editor-pane {
+  flex: 1 1 62%;
+  min-width: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.handoff-pane {
+  flex: 0 0 360px;
+  min-width: 280px;
+}
+
+.markdown-editor {
+  min-height: 500px;
+  height: clamp(500px, 58vh, 760px);
+  width: 100%;
+  padding: 16px;
+  background: var(--field-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.markdown-editor:focus {
+  border-color: var(--border-strong);
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.15);
+}
+
+.markdown-editor::placeholder {
+  color: var(--beige-dim);
+  opacity: 0.6;
+}
+
+/* ─── Buttons ─── */
+.btn-primary {
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent-strong);
+}
+
+.btn-primary:disabled {
+  background: var(--panel-3);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 8px 18px;
+  background: var(--panel-2);
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--panel-3);
+  border-color: var(--border-strong);
+}
+
+.btn-danger {
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-danger:hover {
+  background: rgba(185, 28, 28, 0.12);
+}
+
+.btn-ghost {
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-ghost:hover {
+  color: var(--text-soft);
+}
+
+.btn-compact {
+  padding: 4px 10px;
+  background: var(--panel-2);
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-compact:hover {
+  background: var(--panel-3);
+}
+
+/* ─── Panels ─── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.panel-inset {
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.panel-raised {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── QR Module ─── */
+.qr-module {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qr-code {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── LAN Status Strip ─── */
+.lan-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.lan-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
+}
+
+.lan-url {
+  color: var(--beige);
+  font-family: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+  font-size: 12px;
+}
+
+/* ─── Drawer ─── */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  cursor: pointer;
+  user-select: none;
+  color: var(--label);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  border-top: 1px solid var(--border);
+  transition: color 0.15s ease;
+}
+
+.drawer-header:hover {
+  color: var(--beige);
+}
+
+.drawer-chevron {
+  font-size: 10px;
+  transition: transform 0.15s ease;
+}
+
+.drawer-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.drawer-count {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.drawer-body {
+  padding-bottom: 16px;
+}
+
+/* ─── Payload Row ─── */
+.payload-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  transition: border-color 0.15s ease;
+}
+
+.payload-row:hover {
+  border-color: var(--border-strong);
+}
+
+.payload-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.payload-id {
+  color: var(--beige-dim);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.payload-preview {
+  color: var(--text-soft);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.payload-time {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.payload-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ─── Delete Inline ─── */
+.delete-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(185, 28, 28, 0.06);
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.delete-inline-text {
+  color: var(--text-soft);
+  font-size: 12px;
+  flex: 1;
+}
+
+/* ─── Status Readout ─── */
+.status-readout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-dot.ready {
+  background: #22c55e;
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
+}
+
+.status-dot.idle {
+  background: var(--beige-dim);
+}
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--panel-3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* ─── Prose overrides for viewer ─── */
 .prose-invert a {
   color: #60a5fa;
 }
@@ -37,4 +446,16 @@ input, textarea {
   overflow-x: auto;
   max-width: 100%;
   -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1100px) {
+  .editor-pane {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+  .handoff-pane {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
 }
