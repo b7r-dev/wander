@@ -14,6 +14,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Prevent iOS zoom on input focus */
+input, textarea {
+  font-size: 16px;
+}
+
 /* Override prose-invert link colors to match our theme */
 .prose-invert a {
   color: #60a5fa;

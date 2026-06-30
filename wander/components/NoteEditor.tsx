@@ -29,7 +29,7 @@ export default function NoteEditor({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Paste your markdown here..."
-        className="w-full h-64 p-4 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full h-64 p-4 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 font-mono text-base resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
       <div className="flex gap-3">
         <button
