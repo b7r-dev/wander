@@ -11,7 +11,7 @@ Built with **Wails v2** (Go backend + React frontend), **SQLite**, and **server-
 ## What It Does
 
 1. **Paste markdown** into the desktop app.
-2. **Click "Generate QR & Save"** — a QR code appears.
+2. **Click "Save Payload"** — a QR code appears.
 3. **Scan the QR with your phone** — it opens a clean, beautifully rendered page on your local network.
 4. **Wander away** and read it. That's it.
 
@@ -35,7 +35,7 @@ Notes are stored in a local SQLite database in `~/.wander/wander.db`. They stick
 
 - **Go 1.25+**
 - **Node.js 18+**
-- **Wails CLI v2.12+**: `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
+- **Wails CLI v2.10+**: `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
 
 ### Development
 
@@ -79,18 +79,21 @@ The `/note/:id` route is public by design. Anyone on your local network can scan
 The HTTP sidecar starts at port **3030** and automatically increments if the port is taken. The actual port is displayed in the desktop app.
 
 ### Markdown Rendering
-- **Desktop app**: `react-markdown` + `remark-gfm` + `react-syntax-highlighter` (Prism)
-- **Phone viewer**: Server-side rendered with `goldmark` + GFM extension + Chroma syntax highlighting. Pure HTML/CSS, no JavaScript needed on the phone.
+- **Desktop app**: `react-markdown` + `remark-gfm` + `rehype-raw` + `react-syntax-highlighter` (Prism)
+- **Phone viewer**: Server-side rendered with `goldmark` + GFM extension + DefinitionList extension + Chroma syntax highlighting + raw HTML support. Includes Mermaid.js for diagram rendering. Pure HTML/CSS with no JavaScript required for basic markdown.
 
 ---
 
 ## Features
 
-- **Full GitHub Flavored Markdown** — tables, strikethrough, task lists, autolinks
+- **Full GitHub Flavored Markdown** — tables, strikethrough, task lists, autolinks, definition lists
+- **Mermaid diagrams** — `\`\`\`mermaid` blocks render as diagrams in the phone viewer
 - **Syntax highlighting** — code blocks rendered with Prism (desktop) and Chroma (viewer)
 - **QR code generation** — server-side PNG, displayed as base64 Data URL
 - **Note management** — create, edit, delete, regenerate QR for existing notes
 - **Relative timestamps** — notes show "2h ago", "3d ago", etc.
+- **Heading anchor links** — auto-generated IDs for table of contents
+- **Raw HTML** — `<details>`, `<summary>`, and other inline HTML renders correctly
 - **Dark mode** — easy on the eyes, phone-friendly
 - **SQLite persistence** — notes survive restarts
 
@@ -105,8 +108,8 @@ The HTTP sidecar starts at port **3030** and automatically increments if the por
 | Backend | Go 1.25+ |
 | Database | SQLite via `modernc.org/sqlite` (CGO-free) |
 | QR Codes | `skip2/go-qrcode` |
-| Desktop Markdown | `react-markdown` + `remark-gfm` + `react-syntax-highlighter` |
-| Viewer Markdown | `goldmark` + `extension.GFM` + `goldmark-highlighting` (Chroma) |
+| Desktop Markdown | `react-markdown` + `remark-gfm` + `rehype-raw` + `react-syntax-highlighter` |
+| Viewer Markdown | `goldmark` + `extension.GFM` + `extension.DefinitionList` + `goldmark-highlighting` + `html.WithUnsafe` (Chroma) |
 
 ---
 
@@ -130,15 +133,14 @@ wander/
 │   ├── markdown/
 │   │   └── markdown.go         # goldmark + GFM + Chroma highlighting
 │   └── server/
-│       ├── server.go           # HTTP sidecar setup
-│       ├── handler.go          # /note/:id handler
+│       ├── server.go           # HTTP sidecar setup + /note/:id handler
 │       └── template.go         # Embedded viewer HTML/CSS
 ├── frontend/                    # Vite + React
 │   ├── src/
 │   │   ├── App.tsx             # Main dashboard (single page, panels)
 │   │   ├── components/
 │   │   │   ├── NoteEditor.tsx  # Markdown textarea
-│   │   │   ├── NoteList.tsx    # Notes list with actions
+│   │   │   ├── RecentPayloads.tsx # Notes list with actions
 │   │   │   └── QrPanel.tsx     # QR display
 │   │   └── main.tsx
 │   ├── index.html
