@@ -35,6 +35,7 @@ func init() {
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithXHTML(),
+			html.WithUnsafe(),
 		),
 	)
 }
@@ -80,8 +81,28 @@ func normalizeTables(content string) string {
 	return content
 }
 
+func normalizeCodeBlocks(content string) string {
+	lines := strings.Split(content, "\n")
+	var out []string
+	inCodeBlock := false
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "```") {
+			inCodeBlock = !inCodeBlock
+			out = append(out, line)
+			continue
+		}
+		if inCodeBlock && trimmed == "" {
+			continue
+		}
+		out = append(out, line)
+	}
+	return strings.Join(out, "\n")
+}
+
 func Render(content string) (string, error) {
 	normalized := normalizeTables(content)
+	normalized = normalizeCodeBlocks(normalized)
 	var buf bytes.Buffer
 	if err := md.Convert([]byte(normalized), &buf); err != nil {
 		return "", err
