@@ -35,6 +35,13 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
               </code>
             );
           },
+          table({ children, ...props }: any) {
+            return (
+              <div className="overflow-x-auto -mx-2 px-2">
+                <table {...props}>{children}</table>
+              </div>
+            );
+          },
         }}
       >
         {content}

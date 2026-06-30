@@ -5,40 +5,50 @@ import { getLanUrl } from "@/lib/lan";
 import QRCode from "qrcode";
 
 export async function generateNoteAndQr(content: string, lanBaseUrl: string) {
-  const note = createNote(content);
-  
-  // Extract IP and port from the base URL
-  const url = new URL(lanBaseUrl);
-  const ip = url.hostname;
-  const port = parseInt(url.port, 10);
-  
-  const fullUrl = getLanUrl(ip, port, note.id);
-  const qrDataUrl = await QRCode.toDataURL(fullUrl);
-  
-  return {
-    noteId: note.id,
-    qrDataUrl,
-    fullUrl,
-  };
+  try {
+    const note = createNote(content);
+    
+    // Extract IP and port from the base URL
+    const url = new URL(lanBaseUrl);
+    const ip = url.hostname;
+    const port = parseInt(url.port, 10);
+    
+    const fullUrl = getLanUrl(ip, port, note.id);
+    const qrDataUrl = await QRCode.toDataURL(fullUrl);
+    
+    return {
+      noteId: note.id,
+      qrDataUrl,
+      fullUrl,
+    };
+  } catch (err: any) {
+    console.error("[generateNoteAndQr] Error:", err.message, err.stack);
+    throw new Error(`Failed to generate QR: ${err.message}`);
+  }
 }
 
 export async function generateQrForNote(noteId: number, lanBaseUrl: string) {
-  const note = getNote(noteId);
-  if (!note) {
-    throw new Error("Note not found");
+  try {
+    const note = getNote(noteId);
+    if (!note) {
+      throw new Error("Note not found");
+    }
+    
+    const url = new URL(lanBaseUrl);
+    const ip = url.hostname;
+    const port = parseInt(url.port, 10);
+    
+    const fullUrl = getLanUrl(ip, port, noteId);
+    const qrDataUrl = await QRCode.toDataURL(fullUrl);
+    
+    return {
+      qrDataUrl,
+      fullUrl,
+    };
+  } catch (err: any) {
+    console.error("[generateQrForNote] Error:", err.message, err.stack);
+    throw new Error(`Failed to generate QR: ${err.message}`);
   }
-  
-  const url = new URL(lanBaseUrl);
-  const ip = url.hostname;
-  const port = parseInt(url.port, 10);
-  
-  const fullUrl = getLanUrl(ip, port, noteId);
-  const qrDataUrl = await QRCode.toDataURL(fullUrl);
-  
-  return {
-    qrDataUrl,
-    fullUrl,
-  };
 }
 
 export async function deleteNoteAction(id: number) {

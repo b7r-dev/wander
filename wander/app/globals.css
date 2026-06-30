@@ -8,6 +8,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  background-color: var(--background);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -32,4 +36,11 @@ input, textarea {
 .prose input[type="checkbox"] {
   margin-right: 0.5em;
   accent-color: #3b82f6;
+}
+
+/* Contain wide code blocks to prevent page-level horizontal scroll */
+.prose pre {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }

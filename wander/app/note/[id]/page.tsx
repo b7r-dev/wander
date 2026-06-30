@@ -23,7 +23,7 @@ export default async function NotePage({ params }: NotePageProps) {
   return (
     <main className="min-h-screen bg-gray-950 py-8 px-4">
       <div className="max-w-3xl mx-auto">
-        <article className="bg-gray-900 border border-gray-800 rounded-xl p-6 sm:p-8">
+        <article className="bg-gray-900 border border-gray-800 rounded-xl p-6 sm:p-8 min-w-0">
           <MarkdownRenderer content={note.content} />
         </article>
         <p className="text-center text-gray-600 text-sm mt-6">
