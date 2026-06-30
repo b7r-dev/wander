@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Override prose-invert link colors to match our theme */
+.prose-invert a {
+  color: #60a5fa;
+}
+
+.prose-invert a:hover {
+  color: #93c5fd;
+}
+
+/* Ensure checkboxes in task lists are visible */
+.prose input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: #3b82f6;
+}
